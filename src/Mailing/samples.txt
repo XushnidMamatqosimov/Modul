@@ -1,24 +1,4 @@
-package Mailing;
-
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Base64;
-import java.util.Properties;
-
-//import static Mailing.Main.getSession;
-
-public class MailtrapService {
-    public static void main(String[] args) throws Exception {
-
-        Properties properties = getProperties();
+ Properties properties = getProperties();
         String username = "c6d4ba37ac0c1e";
         String password = "a76f805154f9b0";
         Session session = getSession(properties, username, password);
@@ -29,34 +9,25 @@ public class MailtrapService {
 
         message.setSubject("This is the subject for the message;");
         Multipart multipart = new MimeMultipart();
-        // message.setText("Body of email here;");
+       // message.setText("Body of email here;");
 
-        BodyPart attachment1 = new MimeBodyPart();
-        attachment1.setFileName("MyCV.txt");
-        FileDataSource ds = new FileDataSource("src/cv.txt");
+        BodyPart attachment = new MimeBodyPart();
+        attachment.setFileName("MyCV.txt");
+        FileDataSource ds = new FileDataSource("scr/Mailing/cv.txt");
         DataHandler dataHandler = new DataHandler(ds);
-        attachment1.setDataHandler(dataHandler);
-
-        BodyPart attachment2 = new MimeBodyPart();
-        attachment2.setFileName("CodeSamples2.txt");
-        FileDataSource ds2 = new FileDataSource("src/Mailing/samples.txt");
-        DataHandler dataHandler2 = new DataHandler(ds2);
-        attachment2.setDataHandler(dataHandler2);
-
+        attachment.setDataHandler(dataHandler);
 
         BodyPart contentMessage = new MimeBodyPart();
         String body = """
                 ‹div>
-                <h1 style="color:red;">Body of mail here</h1>
-                <img src="data:image/jpg;base64,%s" width = 400>
-                </div>
+                <h1 style= "color:red;">Body of mail here</h1>
+                 <img src="data:image/jpg;base64,%s width = 400"
                 """.formatted(getImageAsBase64());
+
+
         contentMessage.setContent(body, "text/html");
 
-
-
-        multipart.addBodyPart(attachment1);
-        multipart.addBodyPart(attachment2);
+        multipart.addBodyPart(attachment);
         multipart.addBodyPart(contentMessage);
         message.setContent(multipart);
         Transport.send(message);
@@ -88,4 +59,3 @@ public class MailtrapService {
         });
     }
 }
-
